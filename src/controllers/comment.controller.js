@@ -8,10 +8,27 @@ const getVideoComments = asyncHandler(async (req, res) => {
   //TODO: get all comments for a video
   const { videoId } = req.params;
   const { page = 1, limit = 10 } = req.query;
+
+  const videoComments = await Comment.findById(videoId);
+
+  return res
+    .status(200)
+    .json(
+      new ApiResponse(
+        200,
+        videoComments,
+        "All video comments fetched Successfully.",
+      ),
+    );
 });
 
 const addComment = asyncHandler(async (req, res) => {
-  // TODO: add a comment to a video
+  const newComment = await new Comment(req?.payload).save();
+  return res.status(201).json({
+    success: true,
+    data: newComment,
+    message: "Comment added successfully",
+  });
 });
 
 const updateComment = asyncHandler(async (req, res) => {
